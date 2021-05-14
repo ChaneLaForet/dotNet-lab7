@@ -32,7 +32,7 @@ namespace Lab2.Models
         public DateTime DateAdded { get; set; }
 
         [Range(1, 10)]
-        public int Rating { get; set; }
+        public float Rating { get; set; }
 
         public bool Watched { get; set; }
     }
