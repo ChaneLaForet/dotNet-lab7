@@ -21,7 +21,7 @@ namespace Lab2.Models
         public string Genre { get; set; }
 
         [Required]
-        [MinLength (1)]
+        [Range (1, 1500)]
         public int DurationInMinutes { get; set; }
 
         [Required]
