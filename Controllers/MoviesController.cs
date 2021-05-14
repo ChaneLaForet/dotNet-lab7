@@ -42,6 +42,15 @@ namespace Lab2.Controllers
             return movie;
         }
 
+        //https://localhost:5001/api/movies/sortByDate/2000-01-20&2019-01-30
+        //GET: api/Movies/SortByDateAdded
+        [HttpGet]
+        [Route("sortByDateAdded/{fromDate}&{toDate}")]
+        public async Task<ActionResult<IEnumerable<Movie>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
+        {
+            return await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0).ToListAsync();
+        }
+
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
