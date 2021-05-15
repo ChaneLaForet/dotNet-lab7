@@ -37,5 +37,7 @@ namespace Lab2.Models
         public float Rating { get; set; }
 
         public bool Watched { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }
