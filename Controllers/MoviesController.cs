@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2.Data;
 using Lab2.Models;
+using Lab2.ViewModels;
+using AutoMapper;
 
 namespace Lab2.Controllers
 {
@@ -15,10 +17,12 @@ namespace Lab2.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MoviesController(ApplicationDbContext context)
+        public MoviesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Movies
@@ -51,6 +55,32 @@ namespace Lab2.Controllers
             return await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0).OrderByDescending(m => m.YearOfRelease).ToListAsync();
         }
 
+        //https://localhost:5001/api/movies/1/comments
+        [HttpGet("{id}/Comments")]
+        public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
+        {
+            var query = _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).Select(m => _mapper.Map<MovieWithCommentsViewModel>(m));
+
+            return query.ToList();
+        }
+
+        //https://localhost:5001/api/movies/1/comments
+        [HttpPost("{id}/Comments")]
+        public IActionResult PostCommentForMovie(int id, Comment comment)
+        {
+            var movie = _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).FirstOrDefault();
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            movie.Comments.Add(comment);
+            _context.Entry(movie).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -70,6 +100,37 @@ namespace Lab2.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!MovieExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        //https://localhost:5001/api/movies/1/comments/1
+        //Don't forget to write comment Id in the request body
+        [HttpPut("{id}/Comments/{commentId}")]
+        public async Task<IActionResult> PutComment(int commentId, Comment comment)
+        {
+            if (commentId != comment.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(comment).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(commentId))
                 {
                     return NotFound();
                 }
@@ -109,9 +170,30 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        //https://localhost:5001/api/movies/3/comments/2
+        [HttpDelete("{id}/Comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment(int commentId)
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool MovieExists(int id)
         {
             return _context.Movies.Any(e => e.Id == id);
+        }
+
+        private bool CommentExists(int id)
+        {
+            return _context.Comments.Any(c => c.Id == id);
         }
     }
 }
