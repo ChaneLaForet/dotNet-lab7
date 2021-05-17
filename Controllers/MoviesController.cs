@@ -9,6 +9,7 @@ using Lab2.Data;
 using Lab2.Models;
 using Lab2.ViewModels;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace Lab2.Controllers
 {
@@ -17,11 +18,13 @@ namespace Lab2.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<MoviesController> _logger;
         private readonly IMapper _mapper;
 
-        public MoviesController(ApplicationDbContext context, IMapper mapper)
+        public MoviesController(ApplicationDbContext context, ILogger<MoviesController> logger, IMapper mapper)
         {
             _context = context;
+            _logger = logger;
             _mapper = mapper;
         }
 
