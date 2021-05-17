@@ -9,6 +9,7 @@ using Lab2.Data;
 using Lab2.Models;
 using Lab2.ViewModels;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace Lab2.Controllers
 {
@@ -17,24 +18,27 @@ namespace Lab2.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<MoviesController> _logger;
         private readonly IMapper _mapper;
 
-        public MoviesController(ApplicationDbContext context, IMapper mapper)
+        public MoviesController(ApplicationDbContext context, ILogger<MoviesController> logger, IMapper mapper)
         {
             _context = context;
+            _logger = logger;
             _mapper = mapper;
         }
 
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieViewModel>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            var movies = await _context.Movies.Select(m => _mapper.Map<MovieViewModel>(m)).ToListAsync();
+            return movies;
         }
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieViewModel>> GetMovie(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
 
@@ -43,16 +47,19 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            return movie;
+            return _mapper.Map<MovieViewModel>(movie);
         }
 
         //https://localhost:5001/api/movies/sortByDateAdded/2000-01-20&2019-01-30
         //GET: api/Movies/SortByDateAdded
         [HttpGet]
         [Route("sortByDateAdded/{fromDate}&{toDate}")]
-        public async Task<ActionResult<IEnumerable<Movie>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
+        public async Task<ActionResult<IEnumerable<MovieViewModel>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
         {
-            return await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0).OrderByDescending(m => m.YearOfRelease).ToListAsync();
+            var query = await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0)
+                                             .OrderByDescending(m => m.YearOfRelease)
+                                             .Select(m => _mapper.Map<MovieViewModel>(m)).ToListAsync();
+            return query;
         }
 
         //https://localhost:5001/api/movies/1/comments
@@ -66,7 +73,7 @@ namespace Lab2.Controllers
 
         //https://localhost:5001/api/movies/1/comments
         [HttpPost("{id}/Comments")]
-        public IActionResult PostCommentForMovie(int id, Comment comment)
+        public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
         {
             var movie = _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).FirstOrDefault();
             if (movie == null)
@@ -74,7 +81,7 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            movie.Comments.Add(comment);
+            movie.Comments.Add(_mapper.Map<Comment>(comment));
             _context.Entry(movie).State = EntityState.Modified;
             _context.SaveChanges();
 
@@ -84,14 +91,14 @@ namespace Lab2.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, MovieViewModel movie)
         {
             if (id != movie.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
+            _context.Entry(_mapper.Map<Movie>(movie)).State = EntityState.Modified;
 
             try
             {
@@ -115,14 +122,14 @@ namespace Lab2.Controllers
         //https://localhost:5001/api/movies/1/comments/1
         //Don't forget to write comment Id in the request body
         [HttpPut("{id}/Comments/{commentId}")]
-        public async Task<IActionResult> PutComment(int commentId, Comment comment)
+        public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
         {
             if (commentId != comment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(comment).State = EntityState.Modified;
+            _context.Entry(_mapper.Map<Comment>(comment)).State = EntityState.Modified;
 
             try
             {
@@ -146,9 +153,9 @@ namespace Lab2.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movie)
         {
-            _context.Movies.Add(movie);
+            _context.Movies.Add(_mapper.Map<Movie>(movie));
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
