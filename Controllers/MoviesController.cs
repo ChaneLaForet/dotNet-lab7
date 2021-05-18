@@ -28,6 +28,10 @@ namespace Lab2.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Returns a list of movies.
+        /// </summary>
+        /// <returns>All the movies.</returns>
         // GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieViewModel>>> GetMovies()
@@ -36,6 +40,11 @@ namespace Lab2.Controllers
             return movies;
         }
 
+        /// <summary>
+        /// Returns a movie with the given Id.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <returns>The movie or NotFound.</returns>
         // GET: api/Movies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieViewModel>> GetMovie(int id)
@@ -50,6 +59,12 @@ namespace Lab2.Controllers
             return _mapper.Map<MovieViewModel>(movie);
         }
 
+        /// <summary>
+        /// Returns a list of movies filtered based on the date they were added and ordered descendingly by their release year.
+        /// </summary>
+        /// <param name="fromDate">The lowest (earliest) valid value a movie's DateAdded may have.</param>
+        /// <param name="toDate">The highest (latest) valid value a movie's DateAdded may have.</param>
+        /// <returns>The list of filtered and ordered movies.</returns>
         //https://localhost:5001/api/movies/sortByDateAdded/2000-01-20&2019-01-30
         //GET: api/Movies/SortByDateAdded
         [HttpGet]
@@ -62,6 +77,11 @@ namespace Lab2.Controllers
             return query;
         }
 
+        /// <summary>
+        /// Returns a movie and its comments, based on the given movie's Id.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <returns>A movie and its comments</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpGet("{id}/Comments")]
         public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
@@ -71,6 +91,12 @@ namespace Lab2.Controllers
             return query.ToList();
         }
 
+        /// <summary>
+        /// Adds a comment to a movie.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns>Ok if comment was added, or NotFound if the movie was not found (based on Id.)</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpPost("{id}/Comments")]
         public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
@@ -88,6 +114,12 @@ namespace Lab2.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates a movie.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <param name="movie">The movie.</param>
+        /// <returns>NoContent if movie was added, BadRequest if the Id is not valid, or NotFound if movie was not found (based on Id).</returns>
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -119,6 +151,12 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates a comment.
+        /// </summary>
+        /// <param name="commentId">The comment Id.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns>NoContent if comment was added, BadRequest if the Id is not valid, or NotFound if comment was not found (based on Id).</returns>
         //https://localhost:5001/api/movies/1/comments/1
         //Don't forget to write comment Id in the request body
         [HttpPut("{id}/Comments/{commentId}")]
@@ -150,6 +188,11 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Adds a movie.
+        /// </summary>
+        /// <param name="movie">The movie.</param>
+        /// <returns>The movie, if it was successfully added, BadRequest otherwise.</returns>
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -161,6 +204,11 @@ namespace Lab2.Controllers
             return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
         }
 
+        /// <summary>
+        /// Deletes a movie.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <returns>NoContent if the movie was deleted successfully, or NotFound otherwise.</returns>
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
@@ -177,6 +225,11 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a comment.
+        /// </summary>
+        /// <param name="commentId">The comment Id.</param>
+        /// <returns>NoContent if the comment was deleted successfully, or NotFound otherwise.</returns>
         //https://localhost:5001/api/movies/3/comments/2
         [HttpDelete("{id}/Comments/{commentId}")]
         public async Task<IActionResult> DeleteComment(int commentId)
@@ -193,11 +246,21 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Checks if a movie exists.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <returns>true if movie exists, false otherwise</returns>
         private bool MovieExists(int id)
         {
             return _context.Movies.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Checks if a comment exists.
+        /// </summary>
+        /// <param name="id">The comment Id.</param>
+        /// <returns>true if comment exists, false otherwise</returns>
         private bool CommentExists(int id)
         {
             return _context.Comments.Any(c => c.Id == id);
