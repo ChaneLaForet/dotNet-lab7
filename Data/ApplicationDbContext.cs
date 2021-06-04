@@ -14,6 +14,8 @@ namespace Lab2.Data
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
         public ApplicationDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
