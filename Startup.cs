@@ -1,5 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Lab2.Data;
 using Lab2.Models;
+using Lab2.Validators;
+using Lab2.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,7 +66,9 @@ namespace Lab2
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SigningKey"]))
                     };
                 });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+               .AddFluentValidation()
+               .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -91,6 +97,8 @@ namespace Lab2
                     }
                 });
             });
+
+            services.AddTransient<IValidator<MovieViewModel>, MovieValidator>(); // sau add scoped
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

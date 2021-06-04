@@ -191,17 +191,18 @@ namespace Lab2.Controllers
         /// <summary>
         /// Adds a movie.
         /// </summary>
-        /// <param name="movie">The movie.</param>
-        /// <returns>The movie, if it was successfully added, BadRequest otherwise.</returns>
+        /// <param name="movieRequest">The movie.</param>
+        /// <returns>The movie that was created.</returns>
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movie)
+        public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movieRequest)
         {
-            _context.Movies.Add(_mapper.Map<Movie>(movie));
+            Movie movie = _mapper.Map<Movie>(movieRequest);
+            _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            return CreatedAtAction("GetProduct", new { id = movie.Id }, movie);
         }
 
         /// <summary>
