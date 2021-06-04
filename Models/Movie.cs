@@ -24,7 +24,7 @@ namespace Lab2.Models
         public int DurationInMinutes { get; set; }
 
         //[Required]
-        [Range (1800, 9999)]
+        //[Range (1800, 9999)]
         public int YearOfRelease { get; set; }
 
         //[Required]

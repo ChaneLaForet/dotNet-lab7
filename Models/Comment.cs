@@ -8,11 +8,11 @@ namespace Lab2.Models
 {
     public class Comment
     {
-        [Key]
+        //[Key]
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime DateTime { get; set; }
-        [Range (0,10)]
+        //[Range (1,10)]
         public int Rating { get; set; }
 
         public Movie Movie { get; set; }

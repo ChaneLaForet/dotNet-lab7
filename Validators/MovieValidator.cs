@@ -15,7 +15,13 @@ namespace Lab2.Validators
         {
             _context = context;
 
-            RuleFor(x => x.Description).MinimumLength(10).WithMessage("Hmm... Not a valid description, sorry.");
+            RuleFor(m => m.Title).NotNull();
+            RuleFor(m => m.Description).MinimumLength(20);
+            RuleFor(m => m.Genre).NotNull();
+            RuleFor(m => m.DurationInMinutes).InclusiveBetween(1, 1500);
+            RuleFor(m => m.YearOfRelease).InclusiveBetween(1800, DateTime.Now.Year);
+            RuleFor(m => m.Director).NotNull();
+            RuleFor(m => m.Rating).InclusiveBetween(1, 10).When(m => m.Watched == true);
         }
     }
 }
