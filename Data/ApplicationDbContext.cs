@@ -39,6 +39,9 @@ namespace Lab2.Data
 
             modelBuilder.Entity<Comment>().Property(c => c.Content).IsRequired();
             modelBuilder.Entity<Comment>().Property(c => c.DateTime).IsRequired().HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Playlist>().Property(p => p.PlaylistDateTime).IsRequired().HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Playlist>().Property(p => p.PlaylistName).HasDefaultValue("Untitled Playlist");
         }
     }
 }

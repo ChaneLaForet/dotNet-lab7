@@ -80,7 +80,7 @@ namespace Lab2.Controllers
             }
 
             var result = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id).Include(p => p.Movies)
-                .OrderByDescending(p => p.PlaylistDateTime)
+                .OrderBy(p => p.Id)
                 .ToList();
 
             return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(result);
