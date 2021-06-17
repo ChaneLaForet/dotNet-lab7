@@ -19,6 +19,7 @@ namespace Lab2
             CreateMap<Movie, MovieInPlaylistViewModel>().ReverseMap();
             CreateMap<Playlist, NewPlaylistRequest>().ReverseMap();
             CreateMap<Playlist, PlaylistsForUserResponse>().ReverseMap();
+            CreateMap<Playlist, UpdatedPlaylistViewModel>().ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();
         }
     }

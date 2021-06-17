@@ -136,5 +136,66 @@ namespace Lab2.Controllers
         }
 
 
+        // PUT: https://localhost:5001/api/playlists/9
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdatePlaylist(int id, UpdatedPlaylistViewModel updatedPlaylistViewModel)
+        {
+            if (id != updatedPlaylistViewModel.Id)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            List<Movie> addedMovies = new List<Movie>();
+
+            updatedPlaylistViewModel.MovieIds.ForEach(mid =>
+            {
+                var movieWithId = _context.Movies.Find(mid);
+                if (movieWithId != null)
+                {
+                    addedMovies.Add(movieWithId);
+                }
+            });
+
+            Playlist playlist = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id && p.Id == id).Include(p => p.Movies).FirstOrDefault();
+
+            if (playlist == null)
+            {
+                return BadRequest();
+            }
+
+            if (addedMovies != null)
+            {
+                playlist.Movies = addedMovies;
+            }
+
+            if (updatedPlaylistViewModel.PlaylistName != null)
+            {
+                playlist.PlaylistName = updatedPlaylistViewModel.PlaylistName;
+            }
+
+            playlist.ApplicationUserId = user.Id;
+
+            _context.Entry(playlist).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        private bool PlaylistExists(int id)
+        {
+            return _context.Playlists.Any(p => p.Id == id);
+        }
+
+        private bool MovieExists(int id)
+        {
+            return _context.Movies.Any(m => m.Id == id);
+        }
+
     }
 }
