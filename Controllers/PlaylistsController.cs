@@ -34,6 +34,7 @@ namespace Lab2.Controllers
             _userManager = userManager;
         }
 
+        // POST: https://localhost:5001/api/playlists
         [HttpPost]
         public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
         {
@@ -69,6 +70,7 @@ namespace Lab2.Controllers
             return Ok();
         }
 
+        // GET: https://localhost:5001/api/movielists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PlaylistsForUserResponse>>> GetAll()
         {
@@ -86,5 +88,54 @@ namespace Lab2.Controllers
             return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(result);
         }
 
+        /*
+        // GET: https://localhost:5001/api/playlists/1
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PlaylistsForUserResponse>> GetMovieList(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var playlist = await _context.Playlists.FindAsync(id);
+
+            if (playlist == null)
+            {
+                return NotFound();
+            }
+
+            var resultViewModel = _mapper.Map<PlaylistsForUserResponse>(playlist);
+
+            return Ok(resultViewModel);
+        }
+        */
+
+        // GET: https://localhost:5001/api/playlists/1
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PlaylistsForUserResponse>> GetPlaylistById(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var checkPlaylist = await _context.Playlists.FindAsync(id);
+
+            if (checkPlaylist == null)
+            {
+                return NotFound();
+            }
+
+            var playlist = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id && p.Id == id).Include(p => p.Movies).First();
+
+            var resultViewModel = _mapper.Map<Playlist, PlaylistsForUserResponse>(playlist);
+
+            return Ok(resultViewModel);
+        }
     }
 }
