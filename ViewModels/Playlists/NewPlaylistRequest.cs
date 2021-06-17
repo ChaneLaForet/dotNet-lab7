@@ -8,6 +8,7 @@ namespace Lab2.ViewModels.Playlists
     public class NewPlaylistRequest
     {
         public List<int> MovieIds { get; set; }
+        public string PlaylistName { get; set; }
         public DateTime? PlaylistDateTime { get; set; }
     }
 }

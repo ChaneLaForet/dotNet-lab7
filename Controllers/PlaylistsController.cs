@@ -60,6 +60,7 @@ namespace Lab2.Controllers
             {
                 ApplicationUser = user,
                 PlaylistDateTime = newPlaylistRequest.PlaylistDateTime.GetValueOrDefault(),
+                PlaylistName = newPlaylistRequest.PlaylistName,
                 Movies = addedMovies
             };
 

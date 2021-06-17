@@ -11,8 +11,6 @@ namespace Lab2.ViewModels
 
         public string Title { get; set; }
 
-        public DateTime DateAdded { get; set; }
-
         public float Rating { get; set; }
 
         public bool Watched { get; set; }
