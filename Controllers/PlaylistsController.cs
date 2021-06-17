@@ -40,6 +40,10 @@ namespace Lab2.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             List<Movie> addedMovies = new List<Movie>();
 
