@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Lab2.Models;
 using Lab2.ViewModels;
+using Lab2.ViewModels.Playlists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,10 @@ namespace Lab2
             CreateMap<Movie, MovieViewModel>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap();
             CreateMap<Movie, MovieWithCommentsViewModel>().ReverseMap();
+            CreateMap<Movie, MovieInPlaylistViewModel>().ReverseMap();
+            CreateMap<Playlist, NewPlaylistRequest>().ReverseMap();
+            CreateMap<Playlist, PlaylistsForUserResponse>().ReverseMap();
+            CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();
         }
     }
 }

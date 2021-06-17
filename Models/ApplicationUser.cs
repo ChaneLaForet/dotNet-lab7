@@ -8,5 +8,6 @@ namespace Lab2.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public List<Playlist> Playlists { get; set; }
     }
 }
