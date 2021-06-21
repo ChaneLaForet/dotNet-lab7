@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { NavController } from "@ionic/angular";
+import { AlertController, NavController } from "@ionic/angular";
 import { Movie } from "src/app/models/movie.model";
 import { ApiService } from "src/app/services/api.services";
 
@@ -16,13 +16,30 @@ export class AddMoviePage {
     constructor(
         private apiSvc: ApiService,
         private navCtrl: NavController,
-        //    private alertCtrl: AlertController
+        private alertCtrl: AlertController
     ) { }
 
     addMovie() {
       this.movie.dateAdded = new Date().toISOString();
-      this.apiSvc.post('api/Movies', this.movie).subscribe(() => {  this.navCtrl.pop(); });
-    console.log(this.movie);
+      this.apiSvc.post('api/Movies', this.movie).subscribe(
+        () => {
+          this.navCtrl.pop();
+        },
+        (err) => {
+          let message = 'Validation error';
+          const errorsArray = err?.error?.errors;
+          if (errorsArray) {
+            message = Object.values(errorsArray)[0] as string;
+          }
+          this.alertCtrl
+            .create({
+              header: 'Error',
+              message: message,
+              buttons: ['Ok'],
+            })
+            .then((al) => al.present());
+        }
+      );
     }
 
     backToProducts() {
