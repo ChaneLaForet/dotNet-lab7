@@ -1,10 +1,11 @@
 <app-navbar [pageName]="'Movies'"></app-navbar>
 
 <ion-content>
+
     <ion-list *ngIf="movies; else elseBlock">
         <ion-item *ngFor="let movie of movies; let i = index">
-            <ion-label>{{i + 1}}</ion-label>
-            <ion-label>{{movie.title}}</ion-label>
+            <ion-label class="movie-list-index">{{i + 1}}</ion-label>
+            <ion-label class="ion-text-wrap">{{movie.title}}</ion-label>
 
             <ion-icon name="trash-outline" (click)="deleteMovie(movie)" class="ion-padding-end" color="danger">
             </ion-icon>
@@ -12,9 +13,11 @@
             <ion-icon name="chevron-forward-outline" class="ion-padding-end"></ion-icon>
         </ion-item>
     </ion-list>
+
     <ng-template #elseBlock>
       <ion-item class="wrapper" color="danger">Sorry, no movies to display.</ion-item>
     </ng-template>
+
 </ion-content>
 
 <ion-footer>
