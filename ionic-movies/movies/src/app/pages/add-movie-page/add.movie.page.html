@@ -1,0 +1,44 @@
+<app-navbar [pageName]="'Add movie'"></app-navbar>
+
+<ion-content>
+    <div>
+        <form>
+            <ion-item>
+                <ion-label>Title</ion-label>
+                <ion-input type="text" [(ngModel)]="movie.title" name="title"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Description</ion-label>
+                <ion-input type="text" [(ngModel)]="movie.description" name="description"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Genre</ion-label>
+                <ion-input type="text" [(ngModel)]="movie.genre" name="genre"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Duration in minutes</ion-label>
+                <ion-input type="number" [(ngModel)]="movie.durationInMinutes" name="durationInMinutes"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Year of release</ion-label>
+                <ion-input type="number" [(ngModel)]="movie.yearOfRelease" name="yearOfRelease"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Director</ion-label>
+                <ion-input type="text" type="text" [(ngModel)]="movie.director" name="director"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Rating</ion-label>
+                <ion-input type="number" [(ngModel)]="movie.rating" name="rating"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Watched?</ion-label>
+                <ion-checkbox [(ngModel)]="movie.watched" name="watched"></ion-checkbox>
+            </ion-item>
+        </form>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-button expand="block" (click)="addMovie()">Add movie</ion-button>
+    <ion-button expand="block" color="secondary" [routerLink]="'/movies'">Back to movies</ion-button>
+</ion-footer>
