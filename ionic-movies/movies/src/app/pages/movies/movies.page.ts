@@ -16,11 +16,11 @@ export class MoviesPage {
     }
 
     ionViewWillEnter() {
-        //this.apiSvc.get('api/Movies')
-        //.subscribe((response: Array<Movie>) => {this.movies = response;});
-        // ==
-        //this.loadMovies();
+        this.apiSvc.get('api/Movies')
+            .subscribe((response: Array<Movie>) => { this.movies = response; });
+        this.loadMovies();
 
+        /*
         this.movies = [
             {
                 id: 1,
@@ -47,6 +47,7 @@ export class MoviesPage {
                 watched: true
             }
         ];
+        */
     }
 
     goToAddMovie() {

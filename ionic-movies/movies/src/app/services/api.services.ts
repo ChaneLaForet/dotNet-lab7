@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class ApiService {
-    API_URL = 'https://localhost:44360/';
-    //API_URL = 'https://localhost:5001/';
+    //API_URL = 'https://localhost:44360/';
+    API_URL = 'https://localhost:5001/';
     constructor(private httpClient: HttpClient) { }
 
     get(path: string, params?: any): Observable<any> {

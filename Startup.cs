@@ -115,6 +115,9 @@ namespace Lab2
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+
+                //in order to connect Ionic
+                app.UseCors(builder =>builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             }
             else
             {
