@@ -7,7 +7,7 @@ export class Movie {
     durationInMinutes: number;
     yearOfRelease: number;
     director: string;
-    dateAdded: string;
+    dateAdded?: string;
     rating: number;
     watched: boolean;
 

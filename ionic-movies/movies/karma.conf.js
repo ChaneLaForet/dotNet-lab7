@@ -2,6 +2,13 @@
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
 module.exports = function (config) {
+  /*
+  parserOptions: {
+    project: "tsconfig.json",
+    tsconfigRootDir: __dirname,
+    sourceType: "module",
+  },
+  */
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],

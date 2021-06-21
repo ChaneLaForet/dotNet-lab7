@@ -20,9 +20,9 @@ export class AddMoviePage {
     ) { }
 
     addMovie() {
-        this.apiSvc.post('api/Movies', this.movie).subscribe(() => {
-            this.navCtrl.pop();
-        });
+      this.movie.dateAdded = new Date().toISOString();
+      this.apiSvc.post('api/Movies', this.movie).subscribe(() => {  this.navCtrl.pop(); });
+    console.log(this.movie);
     }
 
     backToProducts() {
