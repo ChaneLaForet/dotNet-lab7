@@ -16,6 +16,7 @@ import { AddMoviePage } from './pages/add-movie-page/add.movie.page';
 import { FormsModule } from '@angular/forms';
 import { ViewMoviePage } from './pages/view-movie-page/view.movie.page';
 import { EditMoviePage } from './pages/edit-movie-page/edit.movie.page';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { EditMoviePage } from './pages/edit-movie-page/edit.movie.page';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ApiService,
+    AuthService
   ],
   bootstrap: [AppComponent],
 })
