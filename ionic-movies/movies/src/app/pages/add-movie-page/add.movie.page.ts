@@ -21,6 +21,7 @@ export class AddMoviePage {
 
     addMovie() {
       this.movie.dateAdded = new Date().toISOString();
+
       this.apiSvc.post('api/Movies', this.movie).subscribe(
         () => {
           this.navCtrl.pop();
@@ -42,7 +43,7 @@ export class AddMoviePage {
       );
     }
 
-    backToProducts() {
+    backToMovies() {
         this.navCtrl.pop();
     }
 }

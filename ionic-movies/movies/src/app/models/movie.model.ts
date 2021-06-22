@@ -11,6 +11,10 @@ export class Movie {
     rating: number;
     watched: boolean;
 
+    constructor(values: Object = {}) {
+      Object.assign(this, values);
+      }
+
     /*
             public int Id { get; set; }
             public string Title { get; set; }

@@ -14,13 +14,14 @@ import { ApiService } from './services/api.services';
 import { HttpClientModule } from '@angular/common/http';
 import { AddMoviePage } from './pages/add-movie-page/add.movie.page';
 import { FormsModule } from '@angular/forms';
+import { ViewMoviePage } from './pages/view-movie-page/view.movie.page';
 
 @NgModule({
   declarations: [
     //components
     AppComponent, NavbarComponent, SideMenuComponent,
     //pages
-    AddMoviePage, LoginPage, MoviesPage
+    AddMoviePage, LoginPage, MoviesPage, ViewMoviePage
   ],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HttpClientModule],

@@ -9,8 +9,8 @@
 
             <ion-icon name="trash-outline" (click)="deleteMovie(movie)" class="ion-padding-end" color="danger">
             </ion-icon>
-            <ion-icon name="pencil-outline" class="ion-padding-end" color="primary"></ion-icon>
-            <ion-icon name="chevron-forward-outline" class="ion-padding-end"></ion-icon>
+            <ion-icon name="pencil-outline" class="ion-padding-end" color="primary" (click)="goToEditMovie(movie)"></ion-icon>
+            <ion-icon name="chevron-forward-outline" class="ion-padding-end" (click)="goToViewMovieDetails(movie)"></ion-icon>
         </ion-item>
     </ion-list>
 

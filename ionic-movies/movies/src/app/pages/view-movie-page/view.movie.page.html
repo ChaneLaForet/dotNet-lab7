@@ -1,0 +1,35 @@
+<app-navbar [pageName]="'View Movie'"></app-navbar>
+
+<ion-content>
+
+<div *ngIf="movie; else elseBlock">
+  <ion-item><span class="pill">Title</span><div class="info-margin">{{movie.title}}</div></ion-item>
+  <ion-item><span class="pill">Description</span><div class="info-margin">{{movie.description}}</div></ion-item>
+  <ion-item><span class="pill">Duration (minutes)</span><div class="info-margin">{{movie.durationInMinutes}}</div></ion-item>
+  <ion-item><span class="pill">Year of release</span><div class="info-margin">{{movie.yearOfRelease}}</div></ion-item>
+  <ion-item><span class="pill">Director</span><div class="info-margin">{{movie.director}}</div></ion-item>
+  <ion-item><span class="pill">Rating</span><div class="info-margin">{{movie.rating}}</div></ion-item>
+  <ion-item><span class="pill">Watched?</span>
+      <ng-container  *ngIf="movie.watched === true; then isWatched; else isNotWatched"></ng-container>
+      <ng-template #isWatched>
+        <div class="info-margin">
+          Yes
+        </div>
+      </ng-template>
+      <ng-template #isNotWatched>
+        <div class="info-margin">
+          No
+        </div>
+      </ng-template>
+  </ion-item>
+</div>
+
+<ng-template #elseBlock>
+  <ion-item class="wrapper" color="danger">Sorry, an error occurred. The movie could not be displayed.</ion-item>
+</ng-template>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" color="secondary" [routerLink]="'/movies'">Back to movies</ion-button>
+</ion-footer>
