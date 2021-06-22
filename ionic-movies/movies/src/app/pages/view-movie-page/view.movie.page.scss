@@ -22,5 +22,8 @@ app-view-movie {
 
   .info-margin {
     margin-right: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
   }
 }
