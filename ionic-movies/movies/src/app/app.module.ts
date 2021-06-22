@@ -11,12 +11,13 @@ import { MoviesPage } from './pages/movies/movies.page';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SideMenuComponent } from './components/side.menu/side.menu.component';
 import { ApiService } from './services/api.services';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AddMoviePage } from './pages/add-movie-page/add.movie.page';
 import { FormsModule } from '@angular/forms';
 import { ViewMoviePage } from './pages/view-movie-page/view.movie.page';
 import { EditMoviePage } from './pages/edit-movie-page/edit.movie.page';
 import { AuthService } from './services/auth.service';
+import { TokenInterceptor } from './interceptors/auth.token.interceptor';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,12 @@ import { AuthService } from './services/auth.service';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ApiService,
-    AuthService
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
