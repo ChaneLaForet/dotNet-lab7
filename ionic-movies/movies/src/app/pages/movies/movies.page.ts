@@ -69,7 +69,12 @@ export class MoviesPage {
 */
 
   goToEditMovie(movie: Movie) {
-    //this.router.navigateByUrl();
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        special: JSON.stringify(movie),
+      },
+    };
+    this.router.navigate(['movies/edit-movie/' + movie.id], navigationExtras);
   }
 
   private loadMovies() {

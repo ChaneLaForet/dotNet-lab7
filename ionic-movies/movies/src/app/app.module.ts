@@ -15,17 +15,33 @@ import { HttpClientModule } from '@angular/common/http';
 import { AddMoviePage } from './pages/add-movie-page/add.movie.page';
 import { FormsModule } from '@angular/forms';
 import { ViewMoviePage } from './pages/view-movie-page/view.movie.page';
+import { EditMoviePage } from './pages/edit-movie-page/edit.movie.page';
 
 @NgModule({
   declarations: [
     //components
-    AppComponent, NavbarComponent, SideMenuComponent,
+    AppComponent,
+    NavbarComponent,
+    SideMenuComponent,
     //pages
-    AddMoviePage, LoginPage, MoviesPage, ViewMoviePage
+    AddMoviePage,
+    LoginPage,
+    MoviesPage,
+    ViewMoviePage,
+    EditMoviePage,
   ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ApiService],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+  ],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ApiService,
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
