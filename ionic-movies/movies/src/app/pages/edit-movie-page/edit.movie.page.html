@@ -1,52 +1,61 @@
 <app-navbar [pageName]="'Edit Movie'"></app-navbar>
 
+<ng-container *ngIf="isLoggedIn; then isAuthorized; else isUnauthorized"></ng-container>
 
-<ion-content>
+<ng-template #isAuthorized>
 
-  <div *ngIf="movie; else elseBlock">
-    <form>
-      <ion-item>
-        <ion-label class="pill">Title</ion-label>
-        <ion-textarea [(ngModel)]="movie.title" name="title"></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Description</ion-label>
-        <ion-textarea [(ngModel)]="movie.description" name="description" rows=8></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Genre</ion-label>
-        <ion-input type="text" [(ngModel)]="movie.genre" name="genre"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Duration in minutes</ion-label>
-        <ion-input type="number" [(ngModel)]="movie.durationInMinutes" name="durationInMinutes"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Year of release</ion-label>
-        <ion-input type="number" [(ngModel)]="movie.yearOfRelease" name="yearOfRelease"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Director</ion-label>
-        <ion-input type="text" type="text" [(ngModel)]="movie.director" name="director"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Rating</ion-label>
-        <ion-input type="number" [(ngModel)]="movie.rating" name="rating"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label class="pill">Watched?</ion-label>
-        <ion-checkbox [(ngModel)]="movie.watched" name="watched"></ion-checkbox>
-      </ion-item>
-    </form>
-  </div>
+  <ion-content>
+    <div *ngIf="movie; else elseBlock">
+      <form>
+        <ion-item>
+          <ion-label class="pill">Title</ion-label>
+          <ion-textarea [(ngModel)]="movie.title" name="title"></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Description</ion-label>
+          <ion-textarea [(ngModel)]="movie.description" name="description" rows=8></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Genre</ion-label>
+          <ion-input type="text" [(ngModel)]="movie.genre" name="genre"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Duration in minutes</ion-label>
+          <ion-input type="number" [(ngModel)]="movie.durationInMinutes" name="durationInMinutes"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Year of release</ion-label>
+          <ion-input type="number" [(ngModel)]="movie.yearOfRelease" name="yearOfRelease"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Director</ion-label>
+          <ion-input type="text" type="text" [(ngModel)]="movie.director" name="director"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Rating</ion-label>
+          <ion-input type="number" [(ngModel)]="movie.rating" name="rating"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="pill">Watched?</ion-label>
+          <ion-checkbox [(ngModel)]="movie.watched" name="watched"></ion-checkbox>
+        </ion-item>
+      </form>
+    </div>
 
-  <ng-template #elseBlock>
-    <ion-item class="wrapper" color="danger">Sorry, an error occurred. The movie could not be displayed.</ion-item>
-  </ng-template>
+    <ng-template #elseBlock>
+      <ion-item class="wrapper" color="danger">Sorry, an error occurred. The movie could not be displayed.</ion-item>
+    </ng-template>
+  </ion-content>
 
-</ion-content>
+  <ion-footer>
+    <ion-button expand="block" color="primary" (click)="editMovie(movie)">Edit movie</ion-button>
+    <ion-button expand="block" color="secondary" [routerLink]="'/movies'">Back to movies</ion-button>
+  </ion-footer>
+</ng-template>
 
-<ion-footer>
-  <ion-button expand="block" color="primary" (click)="editMovie(movie)">Edit movie</ion-button>
-  <ion-button expand="block" color="secondary" [routerLink]="'/movies'">Back to movies</ion-button>
-</ion-footer>
+<ng-template #isUnauthorized>
+  <ion-item class="wrapper" color="danger">Sorry, you must be logged in to edit a movie.</ion-item>
+  <ion-footer>
+    <ion-button expand="block" color="secondary" [routerLink]="'/movies'">View movies</ion-button>
+  </ion-footer>
+</ng-template>

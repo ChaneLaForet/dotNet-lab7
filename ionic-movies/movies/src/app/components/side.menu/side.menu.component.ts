@@ -11,7 +11,19 @@ import { AuthService } from "src/app/services/auth.service";
 })
 export class SideMenuComponent {
 
-  constructor(private authSvc: AuthService, private navCtrl: NavController) {}
+  isLoggedIn: boolean;
+
+  constructor(private authSvc: AuthService, private navCtrl: NavController, private router: Router) {}
+
+  ionViewWillEnter() {
+    if (this.authSvc.getToken() !== null)
+      this.isLoggedIn = true;
+    else this.isLoggedIn = false;
+  }
+
+  logIn() {
+    this.router.navigateByUrl('/login');
+  }
 
   logOut() {
     this.authSvc.removeToken();

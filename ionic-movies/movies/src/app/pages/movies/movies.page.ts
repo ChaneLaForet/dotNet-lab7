@@ -1,7 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { BooleanValueAccessor } from '@ionic/angular';
 import { Movie } from 'src/app/models/movie.model';
 import { ApiService } from 'src/app/services/api.services';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data/data.service';
 
 @Component({
@@ -13,15 +15,20 @@ import { DataService } from 'src/app/services/data/data.service';
 export class MoviesPage {
   //movie: Movie;
   movies: Array<Movie>; //sau movies: Movie[];
+  isLoggedIn: boolean;
 
   constructor(
     private apiSvc: ApiService,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private authSvc: AuthService
   ) {}
 
   ionViewWillEnter() {
     this.loadMovies();
+    if (this.authSvc.getToken() !== null)
+      this.isLoggedIn = true;
+    else this.isLoggedIn = false;
   }
 
   goToAddMovie() {

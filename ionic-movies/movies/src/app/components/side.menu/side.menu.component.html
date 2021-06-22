@@ -1,17 +1,28 @@
 <ion-menu slot="start" menuId="main" contentId="content1">
   <ion-header>
     <ion-toolbar>
-      <ion-title color="primary">My App</ion-title>
+      <ion-title color="primary">Movie App</ion-title>
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
     <ion-list>
       <ion-menu-toggle auto-hide="true">
         <ion-item [routerLink]="'/movies'">My movies</ion-item>
       </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <ion-item (click)="logOut()">Log out</ion-item>
-      </ion-menu-toggle>
+      <ng-container *ngIf="isLoggedIn; then isAuthorized; else isUnauthorized"></ng-container>
+      <ng-template #isAuthorized>
+        <ion-menu-toggle auto-hide="true">
+          <ion-item (click)="logOut()" class="pointer">Log out</ion-item>
+        </ion-menu-toggle>
+      </ng-template>
+      <ng-template #isUnauthorized>
+        <ion-menu-toggle auto-hide="true">
+          <ion-item (click)="logIn()" class="pointer">Log in</ion-item>
+        </ion-menu-toggle>
+      </ng-template>
     </ion-list>
   </ion-content>
 </ion-menu>
+
+<!-- TO DO: FIX LOG IN/OUT LINKS!!!!!!!!!!!!!!!!!!!-->
