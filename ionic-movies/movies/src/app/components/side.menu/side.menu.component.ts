@@ -27,6 +27,7 @@ export class SideMenuComponent {
 
   logOut() {
     this.authSvc.removeToken();
+    //this.isLoggedIn = false;
     this.navCtrl.navigateRoot('');
   }
 }
