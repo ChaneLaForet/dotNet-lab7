@@ -27,7 +27,13 @@ export class LoginPage {
       .post('api/Authentication/login', this.loginData)
       .subscribe((response: AuthResponse) => {
         this.authSvc.saveToken(response.token);
+        this.clearLoginForm();
         this.router.navigateByUrl('/movies');
       });
+  }
+
+  private clearLoginForm(){
+    this.loginData.email = "";
+    this.loginData.password = "";
   }
 }

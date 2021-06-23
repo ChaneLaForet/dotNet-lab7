@@ -9,7 +9,7 @@ import { AuthService } from "src/app/services/auth.service";
     styleUrls: ['side.menu.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class SideMenuComponent {
+export class SideMenuComponent  {
 
   isLoggedIn: boolean;
 
@@ -27,7 +27,12 @@ export class SideMenuComponent {
 
   logOut() {
     this.authSvc.removeToken();
-    //this.isLoggedIn = false;
     this.navCtrl.navigateRoot('');
+  }
+
+  private checkAuthorization() {
+    if (this.authSvc.getToken() !== null)
+      this.isLoggedIn = true;
+    else this.isLoggedIn = false;
   }
 }
