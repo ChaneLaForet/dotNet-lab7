@@ -2,7 +2,7 @@
 
 <ion-content>
 
-  <ion-list *ngIf="movies; else elseBlock">
+  <ion-list>
     <ion-item [color]="even? 'white' : 'light'" *ngFor="let movie of movies; let i = index; let even = even">
       <ion-label class="movie-list-index">{{i + 1}}</ion-label>
       <ion-label class="ion-text-wrap">{{movie.title}}</ion-label>
@@ -12,14 +12,12 @@
       </ion-icon>
       <ion-icon id="edit-movie" *ngIf="isLoggedIn" name="pencil-outline" class="ion-padding-end" color="primary"
         (click)="goToEditMovie(movie)"></ion-icon>
-      <ion-icon id="view-movie-details" name="chevron-forward-outline" class="ion-padding-end"
-        (click)="goToViewMovieDetails(movie)"></ion-icon>
+      <div class="view-movie-details">
+        <ion-icon name="chevron-forward-outline" class="ion-padding-end" (click)="goToViewMovieDetails(movie)">
+        </ion-icon>
+      </div>
     </ion-item>
   </ion-list>
-
-  <ng-template #elseBlock>
-    <ion-item class="wrapper" color="danger">Sorry, no movies to display.</ion-item>
-  </ng-template>
 
 </ion-content>
 

@@ -24,12 +24,45 @@ export class MoviesPage {
     private authSvc: AuthService
   ) {}
 
+
   ionViewWillEnter() {
     this.loadMovies();
     if (this.authSvc.getToken() !== null)
       this.isLoggedIn = true;
     else this.isLoggedIn = false;
   }
+
+
+/*
+  ionViewWillEnter() {
+    this.movies = [
+        {
+            id: 1,
+            title: 'title',
+            description: 'description',
+            genre: 'genre',
+            durationInMinutes: 10,
+            yearOfRelease: 1999,
+            director: 'director',
+            dateAdded: '2015-03-15T18:50:00',
+            rating: 10,
+            watched: true
+        },
+        {
+            id: 2,
+            title: 'title2',
+            description: 'description2',
+            genre: 'genre2',
+            durationInMinutes: 9,
+            yearOfRelease: 2000,
+            director: 'director2',
+            dateAdded: '2013-03-15T18:50:00',
+            rating: 9,
+            watched: true
+        }
+    ];
+}
+*/
 
   goToAddMovie() {
     this.router.navigateByUrl('movies/add');
