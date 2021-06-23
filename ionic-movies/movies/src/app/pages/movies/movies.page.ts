@@ -13,8 +13,8 @@ import { DataService } from 'src/app/services/data/data.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class MoviesPage {
-  //movie: Movie;
-  movies: Array<Movie>; //sau movies: Movie[];
+
+  movies: Array<Movie>;
   isLoggedIn: boolean;
 
   constructor(
@@ -41,8 +41,6 @@ export class MoviesPage {
     });
   }
 
-  //https://ionicacademy.com/pass-data-angular-router-ionic-4/
-  //1. Using Query Params
   goToViewMovieDetails(movie: Movie) {
     let navigationExtras: NavigationExtras = {
       queryParams: {
@@ -51,29 +49,6 @@ export class MoviesPage {
     };
     this.router.navigate(['movies/view-movie/' + movie.id], navigationExtras);
   }
-
-  /*
-    //https://ionicacademy.com/pass-data-angular-router-ionic-4/
-    //3. Using Extras State (new since Angular 7.2)
-    goToViewMovieDetails(movie: Movie) {
-      console.log("movie 1" + movie);
-      let navigationExtras: NavigationExtras = {
-        state: {
-          movie: this.movie }};
-      this.router.navigate(['movies/view-movie/' + movie.id], navigationExtras);
-    }
-    */
-
-  /*
-
-  /*
-  //https://ionicacademy.com/pass-data-angular-router-ionic-4/
-  //2. Service and Resolve Function
-  goToViewMovieDetails(movie: Movie) {
-    this.dataService.setData(movie.id, this.movie);
-    this.router.navigateByUrl('movies/view-movie/' + movie.id);
-  }
-*/
 
   goToEditMovie(movie: Movie) {
     let navigationExtras: NavigationExtras = {

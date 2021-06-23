@@ -4,10 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DataService {
-  //https://www.codegrepper.com/code-examples/typescript/passing+data+from+one+page+to+another+in+ionic+4
-
-  //https://ionicacademy.com/pass-data-angular-router-ionic-4/
-  //2. Service and Resolve Function
 
   private data = [];
 

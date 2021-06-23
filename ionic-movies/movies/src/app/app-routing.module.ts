@@ -5,7 +5,6 @@ import { EditMoviePage } from './pages/edit-movie-page/edit.movie.page';
 import { LoginPage } from './pages/login/login.page';
 import { MoviesPage } from './pages/movies/movies.page';
 import { ViewMoviePage } from './pages/view-movie-page/view.movie.page';
-import { DataResolverService } from './services/resolver/data-resolver.service';
 
 const routes: Routes = [
   {
@@ -24,18 +23,6 @@ const routes: Routes = [
     path: 'movies/view-movie/:id',
     component: ViewMoviePage,
   },
-  /* //2. Service and Resolve Function
-  {
-    path: 'movies/view-movie/:id',
-    //component: ViewMoviePage,
-    resolve: {
-      special: DataResolverService,
-    },
-    //loadChildren: './view-movie/view-movie.module#ViewMoviePageModule',
-    loadChildren:'./pages/view-movie-page/view-movie-page.module#ViewMoviePageModule',
-    //loadChildren:  () => import('./pages/view-movie-page/view-movie-page.module').then(m => m.ViewMoviePageModule)
-  },
-  */
   {
     path: 'movies/edit-movie/:id',
     component: EditMoviePage,
