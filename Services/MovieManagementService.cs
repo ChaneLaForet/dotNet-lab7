@@ -105,6 +105,28 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<Comment, IEnumerable<MovieError>>> PostCommentForMovie(int id, Comment comment)
+        {
+            var movie = await _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).FirstOrDefaultAsync();
+
+            var serviceResponse = new ServiceResponse<Comment, IEnumerable<MovieError>>();
+
+            try
+            {
+                movie.Comments.Add(comment);
+                _context.Entry(movie).State = EntityState.Modified;
+                _context.SaveChanges();
+                serviceResponse.ResponseOk = comment;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetCommentsForMovie(int id)
         {
             var movies = await _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).ToListAsync();

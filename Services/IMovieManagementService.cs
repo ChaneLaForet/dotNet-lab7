@@ -17,11 +17,11 @@ namespace Lab2.Services
         public Task<ServiceResponse<bool, IEnumerable<MovieError>>> DeleteMovie(int id);
         public Task<ServiceResponse<Movie, IEnumerable<MovieError>>> PostMovie(Movie movie);
         public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetCommentsForMovie(int id);
+        public Task<ServiceResponse<Comment, IEnumerable<MovieError>>> PostCommentForMovie(int id, Comment comment);
         public bool MovieExists(int id);
         public bool CommentExists(int id);
 
         /*
-         * public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
          * public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
          * public async Task<IActionResult> DeleteComment(int commentId)
          */

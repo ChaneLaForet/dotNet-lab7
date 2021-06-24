@@ -172,8 +172,6 @@ namespace Lab2.Controllers
             return _mapper.Map<IEnumerable<Movie>, List<MovieWithCommentsViewModel>>(movies);
         }
 
-        /*
-
         /// <summary>
         /// Adds a comment to a movie.
         /// </summary>
@@ -182,20 +180,20 @@ namespace Lab2.Controllers
         /// <returns>Ok if comment was added, or NotFound if the movie was not found (based on Id.)</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpPost("{id}/Comments")]
-        public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
+        public async Task<IActionResult> PostCommentForMovie(int id, CommentViewModel comment)
         {
-            var movie = _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).FirstOrDefault();
-            if (movie == null)
-            {
-                return NotFound();
-            }
+            var serviceResult = await _movieService.PostCommentForMovie(id, _mapper.Map<Comment>(comment));
 
-            movie.Comments.Add(_mapper.Map<Comment>(comment));
-            _context.Entry(movie).State = EntityState.Modified;
-            _context.SaveChanges();
+            if (serviceResult.ResponseError != null)
+            {
+                return BadRequest();
+            }
 
             return Ok();
         }
+
+
+        /*
 
         /// <summary>
         /// Updates a comment.
