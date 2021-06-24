@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Lab2.Data;
 using Lab2.Models;
+using Lab2.Services;
 using Lab2.ViewModels;
 using Lab2.ViewModels.Playlists;
 using Microsoft.AspNetCore.Authorization;
@@ -21,19 +22,21 @@ namespace Lab2.Controllers
     [Authorize(AuthenticationSchemes = "Identity.Application,Bearer")]
     public class PlaylistsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly ILogger<PlaylistsController> _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPlaylistManagementService _playlistService;
 
-        public PlaylistsController(ApplicationDbContext context, ILogger<PlaylistsController> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public PlaylistsController(ILogger<PlaylistsController> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IPlaylistManagementService playlistService)
         {
-            _context = context;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
+            _playlistService = playlistService;
         }
 
+
+        /*
         // POST: https://localhost:5001/api/playlists
         [HttpPost]
         public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
@@ -200,6 +203,6 @@ namespace Lab2.Controllers
         {
             return _context.Movies.Any(m => m.Id == id);
         }
-
+        */
     }
 }

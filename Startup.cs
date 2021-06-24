@@ -102,6 +102,7 @@ namespace Lab2
             services.AddTransient<IValidator<MovieViewModel>, MovieValidator>(); // sau add scoped
             services.AddTransient<IAuthManagementService, AuthManagementService>();
             services.AddTransient<IMovieManagementService, MovieManagementService>();
+            services.AddTransient<IPlaylistManagementService, PlaylistManagementService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
