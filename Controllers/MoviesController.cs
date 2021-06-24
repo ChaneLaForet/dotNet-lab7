@@ -10,6 +10,7 @@ using Lab2.Models;
 using Lab2.ViewModels;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Lab2.Services;
 
 namespace Lab2.Controllers
 {
@@ -17,15 +18,16 @@ namespace Lab2.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly ILogger<MoviesController> _logger;
         private readonly IMapper _mapper;
+        private readonly IMovieManagementService _movieService;
 
-        public MoviesController(ApplicationDbContext context, ILogger<MoviesController> logger, IMapper mapper)
+        public MoviesController(ILogger<MoviesController> logger, IMapper mapper, IMovieManagementService movieService)
         {
-            _context = context;
             _logger = logger;
             _mapper = mapper;
+            _movieService = movieService;
         }
 
         /// <summary>
@@ -36,10 +38,13 @@ namespace Lab2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieViewModel>>> GetMovies()
         {
-            var movies = await _context.Movies.Select(m => _mapper.Map<MovieViewModel>(m)).ToListAsync();
-            return movies;
+            var serviceResult = await _movieService.GetMovies();
+            var movies = serviceResult.ResponseOk;
+
+            return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
         }
 
+        /*
         /// <summary>
         /// Returns a movie with the given Id.
         /// </summary>
@@ -266,5 +271,6 @@ namespace Lab2.Controllers
         {
             return _context.Comments.Any(c => c.Id == id);
         }
+        */
     }
 }
