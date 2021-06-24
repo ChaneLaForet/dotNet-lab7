@@ -45,5 +45,34 @@ namespace Lab2.Services
             serviceResponse.ResponseOk = movies;
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<Movie, IEnumerable<MovieError>>> PutMovie(int id, Movie movie)
+        {
+            _context.Entry(movie).State = EntityState.Modified;
+            var serviceResponse = new ServiceResponse<Movie, IEnumerable<MovieError>>();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = movie;
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
+
+        public bool MovieExists(int id)
+        {
+            return _context.Movies.Any(m => m.Id == id);
+        }
+
+        public bool CommentExists(int id)
+        {
+            return _context.Comments.Any(c => c.Id == id);
+        }
     }
 }

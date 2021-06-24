@@ -13,17 +13,17 @@ namespace Lab2.Services
         public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetMovies();
         public Task<ServiceResponse<Movie, IEnumerable<MovieError>>> GetMovie(int id);
         public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> SortByDateAdded(DateTime fromDate, DateTime toDate);
+        public Task<ServiceResponse<Movie, IEnumerable<MovieError>>> PutMovie(int id, Movie movie);
+        public bool MovieExists(int id);
+        public bool CommentExists(int id);
 
         /*
          * public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
          * public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
-         * public async Task<IActionResult> PutMovie(int id, MovieViewModel movie)
          * public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
          * public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movieRequest)
          * public async Task<IActionResult> DeleteMovie(int id)
          * public async Task<IActionResult> DeleteComment(int commentId)
-         * private bool MovieExists(int id)
-         * private bool CommentExists(int id)
          */
     }
 }

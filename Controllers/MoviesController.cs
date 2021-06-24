@@ -82,6 +82,38 @@ namespace Lab2.Controllers
             return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
         }
 
+        /// <summary>
+        /// Updates a movie.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <param name="movie">The movie.</param>
+        /// <returns>NoContent if movie was added, BadRequest if the Id is not valid, or NotFound if movie was not found (based on Id).</returns>
+        // PUT: api/Movies/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutMovie(int id, MovieViewModel movie)
+        {
+            if (id != movie.Id)
+            {
+                return BadRequest();
+            }
+
+            var serviceResult = await _movieService.PutMovie(id, _mapper.Map<Movie>(movie));
+
+            if (!_movieService.MovieExists(id))
+            {
+                return NotFound();
+            }
+
+            if (serviceResult.ResponseError != null)
+            {
+                return BadRequest(serviceResult.ResponseError);
+            }
+
+            return NoContent();
+        }
+
+
         /*
 
         /// <summary>
@@ -119,43 +151,6 @@ namespace Lab2.Controllers
             _context.SaveChanges();
 
             return Ok();
-        }
-
-        /// <summary>
-        /// Updates a movie.
-        /// </summary>
-        /// <param name="id">The movie Id.</param>
-        /// <param name="movie">The movie.</param>
-        /// <returns>NoContent if movie was added, BadRequest if the Id is not valid, or NotFound if movie was not found (based on Id).</returns>
-        // PUT: api/Movies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, MovieViewModel movie)
-        {
-            if (id != movie.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(_mapper.Map<Movie>(movie)).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         /// <summary>
@@ -252,26 +247,6 @@ namespace Lab2.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        /// <summary>
-        /// Checks if a movie exists.
-        /// </summary>
-        /// <param name="id">The movie Id.</param>
-        /// <returns>true if movie exists, false otherwise</returns>
-        private bool MovieExists(int id)
-        {
-            return _context.Movies.Any(e => e.Id == id);
-        }
-
-        /// <summary>
-        /// Checks if a comment exists.
-        /// </summary>
-        /// <param name="id">The comment Id.</param>
-        /// <returns>true if comment exists, false otherwise</returns>
-        private bool CommentExists(int id)
-        {
-            return _context.Comments.Any(c => c.Id == id);
         }
         */
     }
