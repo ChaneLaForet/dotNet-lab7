@@ -12,9 +12,9 @@ namespace Lab2.Services
     {
         public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetMovies();
         public Task<ServiceResponse<Movie, IEnumerable<MovieError>>> GetMovie(int id);
+        public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> SortByDateAdded(DateTime fromDate, DateTime toDate);
 
         /*
-         * public async Task<ActionResult<IEnumerable<MovieViewModel>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
          * public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
          * public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
          * public async Task<IActionResult> PutMovie(int id, MovieViewModel movie)

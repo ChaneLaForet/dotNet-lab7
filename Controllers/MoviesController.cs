@@ -64,8 +64,6 @@ namespace Lab2.Controllers
             return _mapper.Map<MovieViewModel>(movie);
         }
 
-        /*
-
         /// <summary>
         /// Returns a list of movies filtered based on the date they were added and ordered descendingly by their release year.
         /// </summary>
@@ -78,11 +76,13 @@ namespace Lab2.Controllers
         [Route("sortByDateAdded/{fromDate}&{toDate}")]
         public async Task<ActionResult<IEnumerable<MovieViewModel>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
         {
-            var query = await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0)
-                                             .OrderByDescending(m => m.YearOfRelease)
-                                             .Select(m => _mapper.Map<MovieViewModel>(m)).ToListAsync();
-            return query;
+            var serviceResult = await _movieService.SortByDateAdded(fromDate, toDate);
+            var movies = serviceResult.ResponseOk;
+
+            return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
         }
+
+        /*
 
         /// <summary>
         /// Returns a movie and its comments, based on the given movie's Id.

@@ -35,5 +35,15 @@ namespace Lab2.Services
 
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
+        {
+            var movies = await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0)
+                                             .OrderByDescending(m => m.YearOfRelease).ToListAsync();
+
+            var serviceResponse = new ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>();
+            serviceResponse.ResponseOk = movies;
+            return serviceResponse;
+        }
     }
 }
