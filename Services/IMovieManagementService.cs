@@ -11,10 +11,9 @@ namespace Lab2.Services
     public interface IMovieManagementService
     {
         public Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetMovies();
-
+        public Task<ServiceResponse<Movie, IEnumerable<MovieError>>> GetMovie(int id);
 
         /*
-         * public async Task<ActionResult<MovieViewModel>> GetMovie(int id)
          * public async Task<ActionResult<IEnumerable<MovieViewModel>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
          * public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
          * public IActionResult PostCommentForMovie(int id, CommentViewModel comment)

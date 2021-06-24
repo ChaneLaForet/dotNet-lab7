@@ -44,7 +44,6 @@ namespace Lab2.Controllers
             return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
         }
 
-        /*
         /// <summary>
         /// Returns a movie with the given Id.
         /// </summary>
@@ -54,7 +53,8 @@ namespace Lab2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieViewModel>> GetMovie(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var serviceResult = await _movieService.GetMovie(id);
+            var movie = serviceResult.ResponseOk;
 
             if (movie == null)
             {
@@ -63,6 +63,8 @@ namespace Lab2.Controllers
 
             return _mapper.Map<MovieViewModel>(movie);
         }
+
+        /*
 
         /// <summary>
         /// Returns a list of movies filtered based on the date they were added and ordered descendingly by their release year.

@@ -26,5 +26,14 @@ namespace Lab2.Services
 
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<Movie, IEnumerable<MovieError>>> GetMovie(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            var serviceResponse = new ServiceResponse<Movie, IEnumerable<MovieError>>();
+            serviceResponse.ResponseOk = movie;
+
+            return serviceResponse;
+        }
     }
 }
