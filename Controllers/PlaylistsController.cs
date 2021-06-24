@@ -35,6 +35,22 @@ namespace Lab2.Controllers
             _playlistService = playlistService;
         }
 
+        // GET: https://localhost:5001/api/playlists
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PlaylistsForUserResponse>>> GetAll()
+        {
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var serviceResponse = await _playlistService.GetAll(user.Id);
+            var playlists = serviceResponse.ResponseOk;
+
+            return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(playlists);
+        }
 
         /*
         // POST: https://localhost:5001/api/playlists
@@ -75,24 +91,6 @@ namespace Lab2.Controllers
             _context.Playlists.Add(playlist);
             await _context.SaveChangesAsync();
             return Ok();
-        }
-
-        // GET: https://localhost:5001/api/playlists
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlaylistsForUserResponse>>> GetAll()
-        {
-            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id).Include(p => p.Movies)
-                .OrderBy(p => p.Id)
-                .ToList();
-
-            return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(result);
         }
 
         // GET: https://localhost:5001/api/playlists/1
@@ -192,16 +190,6 @@ namespace Lab2.Controllers
             _context.Entry(playlist).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-        private bool PlaylistExists(int id)
-        {
-            return _context.Playlists.Any(p => p.Id == id);
-        }
-
-        private bool MovieExists(int id)
-        {
-            return _context.Movies.Any(m => m.Id == id);
         }
         */
     }
