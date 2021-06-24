@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Lab2.Data;
 using Lab2.Models;
+using Lab2.Services;
 using Lab2.Validators;
 using Lab2.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -99,6 +100,7 @@ namespace Lab2
             });
 
             services.AddTransient<IValidator<MovieViewModel>, MovieValidator>(); // sau add scoped
+            services.AddTransient<IAuthManagementService, AuthManagementService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
