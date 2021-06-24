@@ -86,6 +86,25 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<Movie, IEnumerable<MovieError>>> PostMovie(Movie movie)
+        {
+            _context.Movies.Add(movie);
+            var serviceResponse = new ServiceResponse<Movie, IEnumerable<MovieError>>();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = movie;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
+
         public bool MovieExists(int id)
         {
             return _context.Movies.Any(m => m.Id == id);

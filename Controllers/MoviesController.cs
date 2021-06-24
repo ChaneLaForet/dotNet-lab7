@@ -137,7 +137,25 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Adds a movie.
+        /// </summary>
+        /// <param name="movieRequest">The movie.</param>
+        /// <returns>The movie that was created.</returns>
+        // POST: api/Movies
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movieRequest)
+        {
+            var serviceResult = await _movieService.PostMovie(_mapper.Map<Movie>(movieRequest));
 
+            if (serviceResult.ResponseError == null)
+            {
+                return CreatedAtAction("GetMovie", new { id = movieRequest.Id }, movieRequest);
+            }
+
+            return BadRequest();
+        }
 
         /*
 
@@ -213,23 +231,6 @@ namespace Lab2.Controllers
             }
 
             return NoContent();
-        }
-
-        /// <summary>
-        /// Adds a movie.
-        /// </summary>
-        /// <param name="movieRequest">The movie.</param>
-        /// <returns>The movie that was created.</returns>
-        // POST: api/Movies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(MovieViewModel movieRequest)
-        {
-            Movie movie = _mapper.Map<Movie>(movieRequest);
-            _context.Movies.Add(movie);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProduct", new { id = movie.Id }, movie);
         }
 
         /// <summary>
