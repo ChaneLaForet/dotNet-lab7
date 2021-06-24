@@ -113,6 +113,31 @@ namespace Lab2.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a movie.
+        /// </summary>
+        /// <param name="id">The movie Id.</param>
+        /// <returns>NoContent if the movie was deleted successfully, or NotFound otherwise.</returns>
+        // DELETE: api/Movies/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            if (!_movieService.MovieExists(id))
+            {
+                return NotFound();
+            }
+
+            var serviceResult = await _movieService.DeleteMovie(id);
+
+            if (serviceResult.ResponseError != null)
+            {
+                return BadRequest(serviceResult.ResponseError);
+            }
+
+            return NoContent();
+        }
+
+
 
         /*
 
@@ -205,27 +230,6 @@ namespace Lab2.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduct", new { id = movie.Id }, movie);
-        }
-
-        /// <summary>
-        /// Deletes a movie.
-        /// </summary>
-        /// <param name="id">The movie Id.</param>
-        /// <returns>NoContent if the movie was deleted successfully, or NotFound otherwise.</returns>
-        // DELETE: api/Movies/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(int id)
-        {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            _context.Movies.Remove(movie);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         /// <summary>

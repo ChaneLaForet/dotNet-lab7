@@ -65,6 +65,27 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<bool, IEnumerable<MovieError>>> DeleteMovie(int id)
+        {
+            var serviceResponse = new ServiceResponse<bool, IEnumerable<MovieError>>();
+
+            try
+            {
+                var movie = await _context.Movies.FindAsync(id);
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = true;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
+                serviceResponse.ResponseError = errors;
+            }
+
+            return serviceResponse;
+        }
+
         public bool MovieExists(int id)
         {
             return _context.Movies.Any(m => m.Id == id);
@@ -74,5 +95,6 @@ namespace Lab2.Services
         {
             return _context.Comments.Any(c => c.Id == id);
         }
+
     }
 }
