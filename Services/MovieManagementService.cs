@@ -105,6 +105,16 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetCommentsForMovie(int id)
+        {
+            var movies = await _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).ToListAsync();
+
+            var serviceResponse = new ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>();
+            serviceResponse.ResponseOk = movies;
+
+            return serviceResponse;
+        }
+
         public bool MovieExists(int id)
         {
             return _context.Movies.Any(m => m.Id == id);

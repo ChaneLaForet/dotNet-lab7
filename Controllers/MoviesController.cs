@@ -157,8 +157,6 @@ namespace Lab2.Controllers
             return BadRequest();
         }
 
-        /*
-
         /// <summary>
         /// Returns a movie and its comments, based on the given movie's Id.
         /// </summary>
@@ -166,12 +164,15 @@ namespace Lab2.Controllers
         /// <returns>A movie and its comments</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpGet("{id}/Comments")]
-        public ActionResult<IEnumerable<MovieWithCommentsViewModel>> GetCommentsForMovie(int id)
+        public async Task<ActionResult<IEnumerable<MovieWithCommentsViewModel>>> GetCommentsForMovie(int id)
         {
-            var query = _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).Select(m => _mapper.Map<MovieWithCommentsViewModel>(m));
+            var serviceResult = await _movieService.GetCommentsForMovie(id);
+            var movies = serviceResult.ResponseOk;
 
-            return query.ToList();
+            return _mapper.Map<IEnumerable<Movie>, List<MovieWithCommentsViewModel>>(movies);
         }
+
+        /*
 
         /// <summary>
         /// Adds a comment to a movie.
