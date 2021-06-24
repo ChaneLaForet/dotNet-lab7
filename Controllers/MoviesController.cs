@@ -114,6 +114,37 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
+        /// Updates a comment.
+        /// </summary>
+        /// <param name="commentId">The comment Id.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns>NoContent if comment was added, BadRequest if the Id is not valid, or NotFound if comment was not found (based on Id).</returns>
+        //https://localhost:5001/api/movies/1/comments/1
+        //Don't forget to write comment Id in the request body
+        [HttpPut("{id}/Comments/{commentId}")]
+        public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
+        {
+            if (commentId != comment.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_movieService.CommentExists(commentId))
+            {
+                return NotFound();
+            }
+
+            var serviceResult = await _movieService.PutComment(commentId, _mapper.Map<Comment>(comment));
+
+            if (serviceResult.ResponseError != null)
+            {
+                return BadRequest(serviceResult.ResponseError);
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Deletes a movie.
         /// </summary>
         /// <param name="id">The movie Id.</param>
@@ -128,6 +159,30 @@ namespace Lab2.Controllers
             }
 
             var serviceResult = await _movieService.DeleteMovie(id);
+
+            if (serviceResult.ResponseError != null)
+            {
+                return BadRequest(serviceResult.ResponseError);
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes a comment.
+        /// </summary>
+        /// <param name="commentId">The comment Id.</param>
+        /// <returns>NoContent if the comment was deleted successfully, or NotFound otherwise.</returns>
+        //https://localhost:5001/api/movies/3/comments/2
+        [HttpDelete("{id}/Comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment(int commentId)
+        {
+            if (!_movieService.CommentExists(commentId))
+            {
+                return NotFound();
+            }
+
+            var serviceResult = await _movieService.DeleteComment(commentId);
 
             if (serviceResult.ResponseError != null)
             {
@@ -177,7 +232,7 @@ namespace Lab2.Controllers
         /// </summary>
         /// <param name="id">The movie Id.</param>
         /// <param name="comment">The comment.</param>
-        /// <returns>Ok if comment was added, or NotFound if the movie was not found (based on Id.)</returns>
+        /// <returns>Ok if the comment was added, or NotFound if the movie was not found (based on Id.)</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpPost("{id}/Comments")]
         public async Task<IActionResult> PostCommentForMovie(int id, CommentViewModel comment)
@@ -194,44 +249,6 @@ namespace Lab2.Controllers
 
 
         /*
-
-        /// <summary>
-        /// Updates a comment.
-        /// </summary>
-        /// <param name="commentId">The comment Id.</param>
-        /// <param name="comment">The comment.</param>
-        /// <returns>NoContent if comment was added, BadRequest if the Id is not valid, or NotFound if comment was not found (based on Id).</returns>
-        //https://localhost:5001/api/movies/1/comments/1
-        //Don't forget to write comment Id in the request body
-        [HttpPut("{id}/Comments/{commentId}")]
-        public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
-        {
-            if (commentId != comment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(_mapper.Map<Comment>(comment)).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(commentId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         /// <summary>
         /// Deletes a comment.
         /// </summary>

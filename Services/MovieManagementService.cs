@@ -65,6 +65,25 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<Comment, IEnumerable<MovieError>>> PutComment(int id, Comment comment)
+        {
+            _context.Entry(comment).State = EntityState.Modified;
+            var serviceResponse = new ServiceResponse<Comment, IEnumerable<MovieError>>();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = comment;
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<bool, IEnumerable<MovieError>>> DeleteMovie(int id)
         {
             var serviceResponse = new ServiceResponse<bool, IEnumerable<MovieError>>();
@@ -81,6 +100,26 @@ namespace Lab2.Services
                 var errors = new List<MovieError>();
                 errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
                 serviceResponse.ResponseError = errors;
+            }
+
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<bool, IEnumerable<MovieError>>> DeleteComment(int id)
+        {
+            var serviceResponse = new ServiceResponse<bool, IEnumerable<MovieError>>();
+
+            try
+            {
+                var comment = await _context.Comments.FindAsync(id);
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = true;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<MovieError>();
+                errors.Add(new MovieError { Code = e.GetType().ToString(), Description = e.Message });
             }
 
             return serviceResponse;
