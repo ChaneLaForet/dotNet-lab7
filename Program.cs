@@ -28,6 +28,9 @@ namespace Lab2
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     // context.Database.Migrate(); // apply all migrations
                     SeedMovies.Seed(services, 1000); // Insert default data
+                    SeedPlaylists.Seed(services, 1000);
+                    SeedComments.Seed(services, 1000);
+                    SeedUsers.Seed(services, 1000);
                 }
                 catch (Exception ex)
                 {
