@@ -63,6 +63,11 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
+            if (!_playlistService.PlaylistExists(playlistId))
+            {
+                return NotFound();
+            }
+
             var serviceResponse = await _playlistService.GetPlaylistById(user.Id, playlistId);
             var playlist = serviceResponse.ResponseOk;
 
