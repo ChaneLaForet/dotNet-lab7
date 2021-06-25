@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Lab2.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,57 +19,72 @@ namespace Lab2.Data
 
             if (context.Movies.Count() < 20)
             {
+                var movies = new List<Movie>();
+
                 for (int i = 0; i < count; ++i)
                 {
-
-                    context.Movies.Add(new Models.Movie
+                    var movie = new Models.Movie
                     {
-                        Title = getString(1,50),
+                        Title = getString(1, 50),
                         Description = getString(20, 200),
                         Genre = getGenre(),
                         DurationInMinutes = getNumber(1, 1500),
                         YearOfRelease = getNumber(1800, DateTime.Now.Year),
                         Director = getString(1, 30),
-                        DateAdded = getDate()
-                    });
+                        DateAdded = getDate(),
+                        Watched = getBoolean()
+                    };
+                    if (movie.Watched)
+                    {
+                        movie.Rating = getNumber(1, 10);
+                    }
+                    context.Movies.Add(movie);
+                    movies.Add(movie);
                 }
 
                 context.SaveChanges();
             }
         }
 
-        private static string getString(int min, int max)
-        {
-            string randomString = "";
-            for (int j = 0; j < random.Next(min, max); ++j)
+            private static string getString(int min, int max)
             {
-                randomString += Characters[random.Next(Characters.Length)];
+                string randomString = "";
+                for (int j = 0; j < random.Next(min, max); ++j)
+                {
+                    randomString += Characters[random.Next(Characters.Length)];
+                }
+
+                return randomString;
             }
 
-            return randomString;
-        }
+            private static string getGenre()
+            {
+                List<string> genreList = new List<string>(new string[] { "action", "comedy", "horror", "thriller" });
+                int index = random.Next(genreList.Count);
 
-        private static string getGenre()
-        {
-            List<string> genreList = new List<string>(new string[] { "action", "comedy", "horror", "thriller" });
-            int index = random.Next(genreList.Count);
+                return genreList[index];
+            }
 
-            return genreList[index];
-        }
+            private static int getNumber(int min, int max)
+            {
+                int randomNumber = random.Next(min, max);
 
-        private static int getNumber(int min, int max)
-        {
-            int randomNumber = random.Next(min, max);
+                return randomNumber;
+            }
 
-            return randomNumber;
-        }
+            private static DateTime getDate()
+            {
+                DateTime start = new DateTime(2000, 1, 1);
+                int range = (DateTime.Today - start).Days;
 
-        private static DateTime getDate()
-        {
-            DateTime start = new DateTime(2000, 1, 1);
-            int range = (DateTime.Today - start).Days;
+                return start.AddDays(random.Next(range));
+            }
 
-            return start.AddDays(random.Next(range));
+            private static bool getBoolean()
+            {
+                if (random.NextDouble() >= 0.5)
+                    return true;
+                return false;
+            }
         }
     }
-}
