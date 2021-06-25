@@ -88,13 +88,6 @@ namespace Lab2.Data
 
             return start.AddDays(random.Next(range));
         }
-
-        private static bool getBoolean()
-        {
-            if (random.NextDouble() >= 0.5)
-                return true;
-            return false;
-        }
     }
 }
 
