@@ -37,7 +37,7 @@ namespace Lab2.Controllers
 
         // GET: https://localhost:5001/api/playlists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlaylistsForUserResponse>>> GetAll()
+        public async Task<ActionResult<PaginatedResultSet<Playlist>>> GetAll(int? page = 1, int? perPage = 20)
         {
             var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -46,10 +46,9 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            var serviceResponse = await _playlistService.GetAll(user.Id);
-            var playlists = serviceResponse.ResponseOk;
+            var serviceResponse = await _playlistService.GetAll(user.Id, page, perPage);
 
-            return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(playlists);
+            return serviceResponse.ResponseOk;
         }
 
         // GET: https://localhost:5001/api/playlists/1

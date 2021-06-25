@@ -1,6 +1,7 @@
 ﻿using Lab2.Data;
 using Lab2.Errors;
 using Lab2.Models;
+using Lab2.ViewModels;
 using Lab2.ViewModels.Playlists;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +21,15 @@ namespace Lab2.Services
             _context = context;
         }
 
-        public async Task<ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>> GetAll(string userId)
+        public async Task<ServiceResponse<PaginatedResultSet<Playlist>, IEnumerable<PlaylistError>>> GetAll(string userId, int? page = 1, int? perPage = 10)
         {
             var playlists = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).Include(p => p.Movies).OrderBy(p => p.Id).ToListAsync();
-            var serviceResponse = new ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>();
-            serviceResponse.ResponseOk = playlists;
+
+            var count = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).CountAsync();
+            var resultSet = new PaginatedResultSet<Playlist>(playlists, page.Value, count, perPage.Value);
+
+            var serviceResponse = new ServiceResponse<PaginatedResultSet<Playlist>, IEnumerable<PlaylistError>>();
+            serviceResponse.ResponseOk = resultSet;
 
             return serviceResponse;
         }
