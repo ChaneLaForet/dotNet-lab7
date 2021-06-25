@@ -14,5 +14,6 @@ namespace Lab2.Models
         public int Rating { get; set; }
 
         public Movie Movie { get; set; }
+        public int MovieId { get; set; }
     }
 }

@@ -18,11 +18,19 @@ namespace Lab2.Services
             _context = context;
         }
 
-        public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetMovies()
+        public async Task<ServiceResponse<PaginatedResultSet<Movie>, IEnumerable<MovieError>>> GetMovies(int? page = 1, int? perPage = 10)
         {
-            var movies = await _context.Movies.ToListAsync();
-            var serviceResponse = new ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>();
-            serviceResponse.ResponseOk = movies;
+            var movies = await _context.Movies
+                .OrderBy(m => m.Id)
+                .Skip((page.Value - 1) * perPage.Value)
+                .Take(perPage.Value)
+                .ToListAsync();
+
+            var count = await _context.Movies.CountAsync();
+            var resultSet = new PaginatedResultSet<Movie>(movies, page.Value, count, perPage.Value);
+
+            var serviceResponse = new ServiceResponse<PaginatedResultSet<Movie>, IEnumerable<MovieError>>();
+            serviceResponse.ResponseOk = resultSet;
 
             return serviceResponse;
         }
@@ -36,13 +44,21 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
+        public async Task<ServiceResponse<PaginatedResultSet<Movie>, IEnumerable<MovieError>>> SortByDateAdded(DateTime fromDate, DateTime toDate, int? page = 1, int? perPage = 10)
         {
-            var movies = await _context.Movies.Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0)
-                                             .OrderByDescending(m => m.YearOfRelease).ToListAsync();
+            var movies = await _context.Movies
+                .Where(m => m.DateAdded.CompareTo(fromDate) >= 0 && m.DateAdded.CompareTo(toDate) <= 0)
+                .OrderByDescending(m => m.YearOfRelease)
+                .Skip((page.Value - 1) * perPage.Value)
+                .Take(perPage.Value)
+                .ToListAsync();
 
-            var serviceResponse = new ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>();
-            serviceResponse.ResponseOk = movies;
+            var count = await _context.Movies.CountAsync();
+            var resultSet = new PaginatedResultSet<Movie>(movies, page.Value, count, perPage.Value);
+
+            var serviceResponse = new ServiceResponse<PaginatedResultSet<Movie>, IEnumerable<MovieError>>();
+            serviceResponse.ResponseOk = resultSet;
+
             return serviceResponse;
         }
 
@@ -165,15 +181,22 @@ namespace Lab2.Services
 
             return serviceResponse;
         }
-
-        public async Task<ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>> GetCommentsForMovie(int id)
+        public async Task<ServiceResponse<PaginatedResultSet<Comment>, IEnumerable<MovieError>>> GetCommentsForMovie(int id, int? page = 1, int? perPage = 10)
         {
-            var movies = await _context.Movies.Where(m => m.Id == id).Include(m => m.Comments).ToListAsync();
+            var comments = await _context.Comments
+				.Where(c => c.MovieId == id)
+                .OrderBy(c => c.Id)
+				.Skip((page.Value - 1) * perPage.Value)
+				.Take(perPage.Value)
+				.ToListAsync();
 
-            var serviceResponse = new ServiceResponse<IEnumerable<Movie>, IEnumerable<MovieError>>();
-            serviceResponse.ResponseOk = movies;
+			var count = await _context.Comments.Where(c => c.MovieId == id).CountAsync();
+			var resultSet = new PaginatedResultSet<Comment>(comments, page.Value, count, perPage.Value);
 
-            return serviceResponse;
+			var serviceResponse = new ServiceResponse<PaginatedResultSet<Comment>, IEnumerable<MovieError>>();
+			serviceResponse.ResponseOk = resultSet;
+			
+            return serviceResponse; 
         }
 
         public bool MovieExists(int id)
@@ -185,6 +208,5 @@ namespace Lab2.Services
         {
             return _context.Comments.Any(c => c.Id == id);
         }
-
     }
 }

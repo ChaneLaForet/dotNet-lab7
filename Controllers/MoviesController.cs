@@ -36,12 +36,10 @@ namespace Lab2.Controllers
         /// <returns>All the movies.</returns>
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieViewModel>>> GetMovies()
+        public async Task<ActionResult<PaginatedResultSet<Movie>>> GetMovies(int? page = 1, int? perPage = 20)
         {
-            var serviceResult = await _movieService.GetMovies();
-            var movies = serviceResult.ResponseOk;
-
-            return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
+            var result = await _movieService.GetMovies(page, perPage);
+            return result.ResponseOk;
         }
 
         /// <summary>
@@ -74,12 +72,10 @@ namespace Lab2.Controllers
         //GET: api/Movies/SortByDateAdded
         [HttpGet]
         [Route("sortByDateAdded/{fromDate}&{toDate}")]
-        public async Task<ActionResult<IEnumerable<MovieViewModel>>> SortByDateAdded(DateTime fromDate, DateTime toDate)
+        public async Task<ActionResult<PaginatedResultSet<Movie>>> SortByDateAdded(DateTime fromDate, DateTime toDate, int? page = 1, int? perPage = 20)
         {
-            var serviceResult = await _movieService.SortByDateAdded(fromDate, toDate);
-            var movies = serviceResult.ResponseOk;
-
-            return _mapper.Map<IEnumerable<Movie>, List<MovieViewModel>>(movies);
+            var result = await _movieService.SortByDateAdded(fromDate, toDate, page, perPage);
+            return result.ResponseOk;
         }
 
         /// <summary>
@@ -219,12 +215,16 @@ namespace Lab2.Controllers
         /// <returns>A movie and its comments</returns>
         //https://localhost:5001/api/movies/1/comments
         [HttpGet("{id}/Comments")]
-        public async Task<ActionResult<IEnumerable<MovieWithCommentsViewModel>>> GetCommentsForMovie(int id)
+        public async Task<ActionResult<PaginatedResultSet<Comment>>> GetCommentsForMovie(int id)
         {
-            var serviceResult = await _movieService.GetCommentsForMovie(id);
-            var movies = serviceResult.ResponseOk;
+            if (!_movieService.MovieExists(id))
+            {
+                return NotFound();
+            }
 
-            return _mapper.Map<IEnumerable<Movie>, List<MovieWithCommentsViewModel>>(movies);
+            var serviceResult = await _movieService.GetCommentsForMovie(id);
+
+            return serviceResult.ResponseOk;
         }
 
         /// <summary>
