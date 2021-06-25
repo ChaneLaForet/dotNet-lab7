@@ -52,50 +52,9 @@ namespace Lab2.Controllers
             return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(playlists);
         }
 
-        /*
-        // POST: https://localhost:5001/api/playlists
-        [HttpPost]
-        public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
-        {
-            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            List<Movie> addedMovies = new List<Movie>();
-
-            newPlaylistRequest.MovieIds.ForEach(mid =>
-            {
-                var movieWithId = _context.Movies.Find(mid);
-                if (movieWithId != null)
-                {
-                    addedMovies.Add(movieWithId);
-                }
-            });
-
-            if (addedMovies.Count == 0)
-            {
-                return BadRequest();
-            }
-
-            var playlist = new Playlist
-            {
-                ApplicationUser = user,
-                PlaylistDateTime = newPlaylistRequest.PlaylistDateTime.GetValueOrDefault(),
-                PlaylistName = newPlaylistRequest.PlaylistName,
-                Movies = addedMovies
-            };
-
-            _context.Playlists.Add(playlist);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
-
         // GET: https://localhost:5001/api/playlists/1
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PlaylistsForUserResponse>> GetPlaylistById(int id)
+        [HttpGet("{playlistId}")]
+        public async Task<ActionResult<PlaylistsForUserResponse>> GetPlaylistById(int playlistId)
         {
             var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -104,16 +63,10 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            var playlist = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id && p.Id == id).Include(p => p.Movies).FirstOrDefault();
+            var serviceResponse = await _playlistService.GetPlaylistById(user.Id, playlistId);
+            var playlist = serviceResponse.ResponseOk;
 
-            if (playlist == null)
-            {
-                return NotFound();
-            }
-
-            var resultViewModel = _mapper.Map<Playlist, PlaylistsForUserResponse>(playlist);
-
-            return Ok(resultViewModel);
+            return _mapper.Map<PlaylistsForUserResponse>(playlist);
         }
 
         // DELETE: https://localhost:5001/api/playlists/9
@@ -127,18 +80,40 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            var playlist = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id && p.Id == id).FirstOrDefault();
+            var serviceResponse = await _playlistService.DeletePlaylist(id);
 
-            if (playlist == null)
+            if (serviceResponse.ResponseError != null)
+            {
+                return BadRequest(serviceResponse.ResponseError);
+            }
+
+            return NoContent();
+        }
+
+        // POST: https://localhost:5001/api/playlists
+        [HttpPost]
+        public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
+        {
+            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Playlists.Remove(playlist);
-            await _context.SaveChangesAsync();
+            var serviceResponse = await _playlistService.AddPlaylist(user.Id, newPlaylistRequest);
 
-            return NoContent();
+            if (serviceResponse.ResponseError != null)
+            {
+                return BadRequest(serviceResponse.ResponseError);
+            }
+
+            return Ok();
         }
+
+
+
+        /*
 
 
         // PUT: https://localhost:5001/api/playlists/9

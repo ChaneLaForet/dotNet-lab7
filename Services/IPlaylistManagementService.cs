@@ -1,5 +1,6 @@
 ﻿using Lab2.Errors;
 using Lab2.Models;
+using Lab2.ViewModels.Playlists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,14 @@ namespace Lab2.Services
     {
         public bool PlaylistExists(int id);
         public bool MovieExists(int id);
-        public Task<ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>> GetAll(string id);
-        /*
+        public Task<ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>> GetAll(string userId);
+        public Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> GetPlaylistById(string userId, int id);
+        public Task<ServiceResponse<bool, IEnumerable<PlaylistError>>> DeletePlaylist(int id);
+        public Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> AddPlaylist(string userId, NewPlaylistRequest newPlaylistRequest);
+
+
+        /* 
          * public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
-         * public async Task<ActionResult<PlaylistsForUserResponse>> GetPlaylistById(int id)
-         * public async Task<IActionResult> DeletePlaylist(int id)
          * public async Task<ActionResult> UpdatePlaylist(int id, UpdatedPlaylistViewModel updatedPlaylistViewModel)
          */
     }

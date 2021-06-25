@@ -1,6 +1,8 @@
 ﻿using Lab2.Data;
 using Lab2.Errors;
 using Lab2.Models;
+using Lab2.ViewModels.Playlists;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,40 +22,89 @@ namespace Lab2.Services
 
         public async Task<ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>> GetAll(string userId)
         {
-            var result = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).Include(p => p.Movies).OrderBy(p => p.Id).ToListAsync();
+            var playlists = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).Include(p => p.Movies).OrderBy(p => p.Id).ToListAsync();
             var serviceResponse = new ServiceResponse<List<Playlist>, IEnumerable<PlaylistError>>();
-            serviceResponse.ResponseOk = result;
+            serviceResponse.ResponseOk = playlists;
+
             return serviceResponse;
         }
 
-        /*
-        // GET: https://localhost:5001/api/playlists
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlaylistsForUserResponse>>> GetAll()
+        public async Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> GetPlaylistById(string userId, int playlistId)
         {
-            var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var playlist = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId && p.Id == playlistId)
+                .Include(p => p.Movies).FirstOrDefaultAsync();
+            var serviceResponse = new ServiceResponse<Playlist, IEnumerable<PlaylistError>>();
+            serviceResponse.ResponseOk = playlist;
 
-            if (user == null)
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<bool, IEnumerable<PlaylistError>>> DeletePlaylist(int id)
+        {
+            var serviceResponse = new ServiceResponse<bool, IEnumerable<PlaylistError>>();
+
+            try
             {
-                return NotFound();
+                var playlist = await _context.Playlists.FindAsync(id);
+                _context.Playlists.Remove(playlist);
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = true;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<PlaylistError>();
+                errors.Add(new PlaylistError { Code = e.GetType().ToString(), Description = e.Message });
             }
 
-            var result = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id).Include(p => p.Movies)
-                .OrderBy(p => p.Id)
-                .ToList();
-
-            return _mapper.Map<List<Playlist>, List<PlaylistsForUserResponse>>(result);
+            return serviceResponse;
         }
-         */
+
+        public async Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> AddPlaylist(string userId, NewPlaylistRequest newPlaylistRequest)
+        {
+            var serviceResponse = new ServiceResponse<Playlist, IEnumerable<PlaylistError>>();
+
+            var addedMovies = new List<Movie>();
+            newPlaylistRequest.MovieIds.ForEach(mid =>
+            {
+                var movieWithId = _context.Movies.Find(mid);
+                if (movieWithId != null)
+                {
+                    addedMovies.Add(movieWithId);
+                }
+            });
+
+            var playlist = new Playlist
+            {
+                ApplicationUserId = userId,
+                Movies = addedMovies,
+                PlaylistName = newPlaylistRequest.PlaylistName,
+                PlaylistDateTime = newPlaylistRequest.PlaylistDateTime.GetValueOrDefault(),
+            };
+
+            _context.Playlists.Add(playlist);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = playlist;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<PlaylistError>();
+                errors.Add(new PlaylistError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
 
         public bool MovieExists(int id)
         {
             return _context.Movies.Any(m => m.Id == id);
         }
 
-        public bool PlaylistExists(int id)
+    public bool PlaylistExists(int id)
         {
-            return _context.Comments.Any(c => c.Id == id);
+            return _context.Playlists.Any(p => p.Id == id);
         }
     }
 }
