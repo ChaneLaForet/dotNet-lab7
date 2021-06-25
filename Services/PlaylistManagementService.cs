@@ -23,7 +23,7 @@ namespace Lab2.Services
 
         public async Task<ServiceResponse<PaginatedResultSet<Playlist>, IEnumerable<PlaylistError>>> GetAll(string userId, int? page = 1, int? perPage = 10)
         {
-            var playlists = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).Include(p => p.Movies).OrderBy(p => p.Id).ToListAsync();
+            var playlists = await _context.Playlists.AsNoTracking().Where(p => p.ApplicationUser.Id == userId).Include(p => p.Movies).OrderBy(p => p.Id).ToListAsync();
 
             var count = await _context.Playlists.Where(p => p.ApplicationUser.Id == userId).CountAsync();
             var resultSet = new PaginatedResultSet<Playlist>(playlists, page.Value, count, perPage.Value);
