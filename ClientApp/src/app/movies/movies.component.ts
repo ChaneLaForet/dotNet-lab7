@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Movie } from './movie.model';
 
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent {
 
-  constructor() { }
+  public movies: Movie[];
 
-  ngOnInit() {
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    http.get<Movie[]>(baseUrl + 'movies').subscribe(result => {
+      this.movies = result;
+    }, error => console.error(error));
   }
 
 }
