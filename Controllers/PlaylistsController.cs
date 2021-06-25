@@ -116,16 +116,11 @@ namespace Lab2.Controllers
             return Ok();
         }
 
-
-
-        /*
-
-
         // PUT: https://localhost:5001/api/playlists/9
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePlaylist(int id, UpdatedPlaylistViewModel updatedPlaylistViewModel)
+        [HttpPut("{playlistId}")]
+        public async Task<ActionResult> UpdatePlaylist(int playlistId, UpdatedPlaylistViewModel updatedPlaylistViewModel)
         {
-            if (id != updatedPlaylistViewModel.Id)
+            if (playlistId != updatedPlaylistViewModel.Id)
             {
                 return BadRequest();
             }
@@ -137,40 +132,24 @@ namespace Lab2.Controllers
                 return NotFound();
             }
 
-            List<Movie> addedMovies = new List<Movie>();
-
-            updatedPlaylistViewModel.MovieIds.ForEach(mid =>
+            if (!_playlistService.PlaylistExists(playlistId))
             {
-                var movieWithId = _context.Movies.Find(mid);
-                if (movieWithId != null)
-                {
-                    addedMovies.Add(movieWithId);
-                }
-            });
-
-            Playlist playlist = _context.Playlists.Where(p => p.ApplicationUser.Id == user.Id && p.Id == id).Include(p => p.Movies).FirstOrDefault();
-
-            if (playlist == null)
-            {
-                return BadRequest();
+                return NotFound();
             }
 
-            if (addedMovies != null)
+            var playlistResponse = await _playlistService.GetPlaylistById(user.Id, updatedPlaylistViewModel.Id);
+
+            Playlist playlist = playlistResponse.ResponseOk;
+
+
+            var serviceResponse = await _playlistService.UpdatePlaylist(playlist, updatedPlaylistViewModel);
+
+            if (serviceResponse.ResponseError != null)
             {
-                playlist.Movies = addedMovies;
+                return BadRequest(serviceResponse.ResponseError);
             }
 
-            if (updatedPlaylistViewModel.PlaylistName != null)
-            {
-                playlist.PlaylistName = updatedPlaylistViewModel.PlaylistName;
-            }
-
-            playlist.ApplicationUserId = user.Id;
-
-            _context.Entry(playlist).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
-        */
     }
 }

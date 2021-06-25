@@ -16,11 +16,6 @@ namespace Lab2.Services
         public Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> GetPlaylistById(string userId, int id);
         public Task<ServiceResponse<bool, IEnumerable<PlaylistError>>> DeletePlaylist(int id);
         public Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> AddPlaylist(string userId, NewPlaylistRequest newPlaylistRequest);
-
-
-        /* 
-         * public async Task<ActionResult> AddPlaylist(NewPlaylistRequest newPlaylistRequest)
-         * public async Task<ActionResult> UpdatePlaylist(int id, UpdatedPlaylistViewModel updatedPlaylistViewModel)
-         */
+        public Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> UpdatePlaylist(Playlist playlist, UpdatedPlaylistViewModel updatedPlaylistViewModel);
     }
 }

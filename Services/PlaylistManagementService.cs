@@ -97,12 +97,35 @@ namespace Lab2.Services
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<Playlist, IEnumerable<PlaylistError>>> UpdatePlaylist(Playlist playlist, UpdatedPlaylistViewModel updatedPlaylistViewModel)
+        {
+            playlist.PlaylistName = updatedPlaylistViewModel.PlaylistName;
+            playlist.Movies = await _context.Movies.Where(m => updatedPlaylistViewModel.MovieIds.Contains(m.Id)).ToListAsync();
+
+            _context.Entry(playlist).State = EntityState.Modified;
+
+            var serviceResponse = new ServiceResponse<Playlist, IEnumerable<PlaylistError>>();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                serviceResponse.ResponseOk = playlist;
+            }
+            catch (Exception e)
+            {
+                var errors = new List<PlaylistError>();
+                errors.Add(new PlaylistError { Code = e.GetType().ToString(), Description = e.Message });
+            }
+
+            return serviceResponse;
+        }
+
         public bool MovieExists(int id)
         {
             return _context.Movies.Any(m => m.Id == id);
         }
 
-    public bool PlaylistExists(int id)
+        public bool PlaylistExists(int id)
         {
             return _context.Playlists.Any(p => p.Id == id);
         }
