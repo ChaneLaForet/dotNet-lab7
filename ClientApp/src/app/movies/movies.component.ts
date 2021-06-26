@@ -9,12 +9,5 @@ import { Movie } from './movie.model';
 })
 export class MoviesComponent {
 
-  public movies: Movie[];
-
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<Movie[]>(baseUrl + 'movies').subscribe(result => {
-      this.movies = result;
-    }, error => console.error(error));
-  }
 
 }
