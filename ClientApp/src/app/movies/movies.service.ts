@@ -15,7 +15,7 @@ export class MoviesService {
   }
 
   getMovies(page: number): Observable<any> {
-    //return this.httpClient.get<PaginatedMovies>(this.apiUrl + 'movies', { params: { 'page': page } });
-    return this.httpClient.get<PaginatedMovies>(this.apiUrl + 'movies');
+    return this.httpClient.get<PaginatedMovies>(this.apiUrl + 'movies', { params: { 'page': page + '' } });
+    //return this.httpClient.get<PaginatedMovies>(this.apiUrl + 'movies');
   }
 }
