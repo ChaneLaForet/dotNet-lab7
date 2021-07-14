@@ -23,7 +23,8 @@ namespace Lab2.Data
 
                 for (int i = 0; i < count; ++i)
                 {
-                    var email = getEmail();
+                    var email = Faker.Internet.Email();
+                    var username = Faker.Internet.UserName();
 
                     var user = new ApplicationUser
                     {
