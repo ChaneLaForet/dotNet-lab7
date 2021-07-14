@@ -24,14 +24,15 @@ namespace Lab2.Data
                 for (int i = 0; i < count; ++i)
                 {
                     var email = Faker.Internet.Email();
-                    var username = Faker.Internet.UserName();
+                    var username = Faker.Internet.UserName() + i; //TODO: find other ways to keep usernames unique so a user can be added
+                    //for example, save every username faker used in a list and check a new one against it... but search on the internet first
 
                     var user = new ApplicationUser
                     {
                         Email = email,
                         NormalizedEmail = email.ToUpper(),
-                        UserName = email,
-                        NormalizedUserName = email.ToUpper(),
+                        UserName = username,
+                        NormalizedUserName = username.ToUpper(),
                         SecurityStamp = Guid.NewGuid().ToString(),
                         EmailConfirmed = true,
                     };
